@@ -24,6 +24,10 @@ public class PlayerCommandListener implements Listener {
      */
     @SuppressWarnings("SpellCheckingInspection")
     private static final String DISALLOWED_COMMAND = "Comando desconocido.";
+    /**
+     * The {@code Player} who has this permission, doesn't get block the executed commands.
+     */
+    private static final String BYPASS_PERMISSION = "commands.blocked.bypass";
 
     private final Collection<String> blockedCommands;
 
@@ -46,6 +50,9 @@ public class PlayerCommandListener implements Listener {
      * If it's present on the {@link #blockedCommands} it will {@code cancel}
      * the {@param event} and sends a message ({@link #DISALLOWED_COMMAND}) to the
      * {@link PlayerCommandPreprocessEvent#getPlayer()}
+     * <p>
+     * If the {@code Player} executor {@link org.bukkit.entity.Player#hasPermission(String)}
+     * the permission {@link #BYPASS_PERMISSION} hasn't blocked commands for him.
      *
      * @param event the {@code Event} provided by the {@code Spigot} API.
      * @see Collection#contains(Object)
@@ -53,6 +60,10 @@ public class PlayerCommandListener implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerCommandPreprocessEvent(final PlayerCommandPreprocessEvent event) {
+        if (event.getPlayer().hasPermission(BYPASS_PERMISSION)) {
+            return;
+        }
+
         final String commandName = Optional.of(event.getMessage())
                 .filter(command -> command.contains(" "))
                 // If the command contains arguments, we just get the command label
