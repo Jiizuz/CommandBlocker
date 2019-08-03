@@ -20,22 +20,38 @@ public class CommandBlocker extends JavaPlugin {
     /**
      * The commands to disallow defined on the {@code config.yml} file.
      * <p>
-     * We cast our {@code Collection} provided by the
-     * {@link org.bukkit.configuration.file.YamlConfiguration#getStringList(String)}
-     * to {@code HashSet}, it uses a better structure for {@link Collection#contains(Object)}
-     * method, which is what we used for the {@code Collection}
+     * We use {@code HashSet} because uses a better structure for {@link Collection#contains(Object)}
+     * method, which is what the point of the {@code Collection}
      *
      * @see HashSet#contains(Object)
      * @see <a href="https://github.com/eugenp/tutorials/tree/master/core-java-modules/core-java-collections">https://github.com/eugenp/tutorials/tree/master/core-java-modules/core-java-collections</a> for test perfomances.
      */
-    private final Collection<String> blockedCommands = new HashSet<>(getConfig().getStringList("blocked_commands"));
+    private final Collection<String> blockedCommands = new HashSet<>();
 
     /**
      * Plugin startup logic.
      */
     @Override
     public void onEnable() {
+        // Saves if doesn't exists the config.yml file
+        saveDefaultConfig();
+
+        loadBlockedCommands();
+
         registerListeners();
+    }
+
+    /**
+     * Gets from the {@link #getConfig()} a {@code Collection} of
+     * blocked commands to store them for future disallows.
+     *
+     * @see org.bukkit.configuration.file.YamlConfiguration#getStringList(String)
+     * @see Collection#addAll(Collection)
+     */
+    private void loadBlockedCommands() {
+        final Collection<String> blockedCommands = getConfig().getStringList("blocked_commands");
+
+        this.blockedCommands.addAll(blockedCommands);
     }
 
     /**
