@@ -1,0 +1,7 @@
+name: CommandBlocker
+main: com.github.jiizuz.commandblocker.CommandBlocker
+version: 2.0.1
+author: Jiizzuz
+api-version: 1.8.8-R0.1
+description: 'Handles the commands executed by players and check if has to disallow it.'
+prefix: 'CommandBlocker'
