@@ -5,6 +5,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
+import java.util.function.UnaryOperator;
 
 /**
  * {@code CommandBlocker} is a {@code JavaPlugin} to cancel the needed
@@ -47,9 +49,12 @@ public class CommandBlocker extends JavaPlugin {
      *
      * @see org.bukkit.configuration.file.YamlConfiguration#getStringList(String)
      * @see Collection#addAll(Collection)
+     * @see List#replaceAll(UnaryOperator)
      */
     private void loadBlockedCommands() {
-        final Collection<String> blockedCommands = getConfig().getStringList("blocked_commands");
+        final List<String> blockedCommands = getConfig().getStringList("blocked_commands");
+        // Make all the blocked commands to lower case to have more efficient checks
+        blockedCommands.replaceAll(String::toLowerCase);
 
         this.blockedCommands.addAll(blockedCommands);
     }

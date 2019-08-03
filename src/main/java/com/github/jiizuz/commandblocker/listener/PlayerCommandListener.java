@@ -68,10 +68,11 @@ public class PlayerCommandListener implements Listener {
                 .filter(command -> command.contains(" "))
                 // If the command contains arguments, we just get the command label
                 .map(command -> command.split(" ")[0])
-                // Get the element (command name) removing the first slash '/'
-                .orElseGet(() -> event.getMessage().substring(1));
+                // The message it's just like '/plugins' so we take it directly
+                .orElseGet(event::getMessage);
 
-        if (blockedCommands.contains(commandName.toLowerCase())) {
+        // Removing the first slash '/' and checks it on lower case
+        if (blockedCommands.contains(commandName.substring(1).toLowerCase())) {
             event.setCancelled(true);
             event.getPlayer().sendMessage(DISALLOWED_COMMAND);
         }
